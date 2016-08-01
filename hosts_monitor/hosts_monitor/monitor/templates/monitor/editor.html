@@ -1,0 +1,12 @@
+<div class="modal-body" id='loginModalbody'>
+        {% csrf_token %}
+        {% for usr_cred in loginForm %}
+            <div class="control-group {% if usr_cred.errors %}error{% endif %}" id = "control_group">
+              <label class="control-label">{{ usr_cred.label }}</label>
+              <div class="controls">
+                 {{ usr_cred }}
+                <span id="id_errors-{{forloop.counter}}" class="help-inline {% if not usr_cred.errors %}hidden{% endif %}">{{ usr_cred.errors }} </span>
+              </div>
+            </div>
+        {% endfor %}
+</div>

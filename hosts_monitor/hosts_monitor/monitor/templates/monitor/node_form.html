@@ -1,0 +1,13 @@
+<div class="modal-body" id='bbb'>
+        {% csrf_token %}
+        {% for field in edit %}
+            <div class="control-group {% if field.errors %}error{% endif %}">
+              <label class="control-label">{{ field.label }}</label>
+              <div class="controls">
+                 {{ field }}
+                <span class="help-inline hidden" id="{{forloop.counter}}"></span>
+                <span id="id_errors" class="help-inline {% if not field.errors %}hidden{% endif %}">{{ field.errors }}</span>
+              </div>
+            </div>
+        {% endfor %}
+</div>
