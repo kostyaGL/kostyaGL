@@ -1,0 +1,15 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+{% block extra_head_content %}
+{% if question_list %}
+    <ul class="nav nav-list">
+        {% for question in question_list %}
+            <li role="presentation">
+                <a href="{% url 'polls:detail' question.id %}">{{ forloop.counter }}. {{ question.question_text }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+{% endblock %}

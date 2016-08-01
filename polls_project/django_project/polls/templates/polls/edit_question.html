@@ -1,0 +1,33 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+{% block extra_head_content %}
+<div class="modal fade" id="myEditModal" tabindex="-1" role="dialog">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Edit Questions</h4>
+            <font id="error" color="red" hidden>Some fields are empty!</font>
+        </div>
+        <form action="/edit_question/" method="POST"  role="form" id="edit_question_form" autocomplete="off">
+            {% csrf_token %}
+            <div class="modal-body">
+                {% if edit_list %}
+                <ul class="nav nav-list">
+                    {% for question in edit_list %}
+                        <li role="presentation" style="margin: 0 0 5px">
+                            <span>{{ forloop.counter }}) {{ question.question_text }}</span>
+                            <input type="hidden" name="node_to_delete" id="node" value="{{ question.id }}" style="float: right">
+                            <button onclick="submitEditForm(event)" value="{{ question.id }}" name="node_to_delete" class="btn btn-mini" id="node_deletor_{{ question.id }}"  style="float: right">delete question</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No polls are available.</p>{% endif %}
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
