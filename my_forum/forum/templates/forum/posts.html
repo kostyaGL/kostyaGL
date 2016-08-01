@@ -1,0 +1,63 @@
+{% extends 'forum/base.html' %}
+{% load static %}
+{% block extra_head_content %}
+    <div class="container" style="margin-top: 35px">
+        <div class="page-header page-heading">
+            <h1 class="pull-left">Posts</h1>
+            <ol class="breadcrumb pull-right where-am-i">
+                {% if not request.user.username %}
+                    <li><a href="/accounts/login/?next={{ request.path }}">Login</a></li>
+                {% else %}
+                    <li><span>Authorized as <strong>{{ request.user.username|upper }}</strong>. </span><a
+                            href="/accounts/logout/?next=/accounts/login/?next={{ request.path }}"> Logout</a></li>
+
+                {% endif %}
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+        {% if posts %}
+            {% for post in posts.object_list %}
+                <div class="container">
+                <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>{{ post.created }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>
+                    <h5>
+                        <span>Post by {{ post.creator }}</span>
+                        <span class="label label-danger">{{ post.topic.forum.title }}</span>
+                        <span class="label label-primary">{{ post.topic.title }}</span>
+                    </h5>
+                </td>
+                <td width="80%">{{ post.body }}</td>
+            {% endfor %}
+        {% endif %}
+        </tr>
+        </tbody>
+        </table>
+        <nav aria-label="...">
+            <ul class="pager">
+                {% if posts.has_previous %}
+                    <li class="previous"><a href="?page={{ 1 }}"><span aria-hidden="true">&larr;</span> First page</a>
+                    </li>
+                    <li class="previous"><a href="?page={{ posts.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li><a href="#"><span class="badge">{{ posts.number }} from{{ posts.paginator.num_pages }}</span></a>
+                </li>
+                {% if posts.has_next %}
+                    <li class="next"><a href="?page={{ posts.paginator.num_pages }}">Last Page<span
+                            aria-hidden="true">&rarr;</span></a></li>
+                    <li class="next"><a href="?page={{ posts.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% if posts.number == posts.paginator.num_pages %}
+            {% include "forum/submit_form.html" %}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

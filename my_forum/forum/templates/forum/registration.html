@@ -1,0 +1,31 @@
+{% extends 'forum/base.html' %}
+{% load static %}
+{% block extra_head_content %}
+<div class="container" style="margin-top: 35px">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Registration</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-panel hide in active" id="home">
+            <form action="#" method="post">
+                {% csrf_token %}
+                {% for field in registration %}
+                    <label>{{ field.label }}</label>
+                    {% if field.errors %}
+                        <strong style="color: red">{{ field.errors }}</strong>
+                    {% endif %}
+                    {{ field }}
+                {% endfor %}
+                {% if form.errors %}<strong style="color: red">{{ form.non_field_errors }}</strong>{% endif %}
+             <label>
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                    <input class="button small" type="submit" value="Sign in"/>
+                </label>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

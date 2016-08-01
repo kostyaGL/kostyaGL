@@ -1,0 +1,15 @@
+{% extends 'forum/base.html' %}
+{% load static %}
+{% block extra_head_content %}
+    <form action="#" role="form" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="body" class="required"><strong>Comment:</strong></label>
+
+            {% if error_message %}<p><strong style="color: red">{{ error_message }}</strong></p>{% endif %}
+            <textarea id="body" style="width: 930px" rows="5"  name="body"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+{% endblock %}

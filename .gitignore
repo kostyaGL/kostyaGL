@@ -95,13 +95,3 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-
-# PyBuilder
-target/
->>>>>>> 733a64afe17bb0ab98e04f9ea2f85b064585af3f
-Would skip repository my_forum/src/django-debug-toolbar
-my_forum/src/pip-delete-this-directory.txt
-my_forum/db.sqlite3
-my_forum/forum
-my_forum/manage.py
-my_forum/my_forum
