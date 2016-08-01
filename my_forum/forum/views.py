@@ -29,7 +29,6 @@ class TopicDetailView(generic.ListView):
 
 class PostsListView(generic.ListView):
     template_name = 'forum/posts.html'
-    form_class = TopicForm
 
     def get_queryset(self):
         return Topic.objects.get(pk=self.kwargs.get('pk'))
@@ -49,13 +48,10 @@ class PostsListView(generic.ListView):
         data['posts'] = contacts
         return data
 
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
-
     @method_decorator(login_required(login_url='/accounts/login/'))
     def post(self, request, **kwargs):
         post_form = TopicForm(request.POST)
-        data = Topic.objects.get(pk=kwargs.get('pk'))
+        data = self.get_queryset()
         if request.POST and post_form.is_valid():
             post_body = request.POST['body']
             data.post_set.create(body=post_body, creator=request.user)

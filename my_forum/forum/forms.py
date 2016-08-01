@@ -47,10 +47,9 @@ class UserRegistrationForm(UserLoginForm):
         raise forms.ValidationError("This user is already exist.")
 
 
-class TopicForm(forms.Form):
-    body = forms.CharField(widget=forms.Textarea)
-    fields = ('body',)
-
+class TopicForm(ModelForm):
     class Meta:
+        body = forms.CharField(widget=forms.Textarea)
+        fields = ('body',)
         model = Post
 
