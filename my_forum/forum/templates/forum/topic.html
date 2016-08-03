@@ -28,7 +28,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for top in topic.forum.topic_set.all %}
+            {% for top in topic %}
                 <tr>
                 <td class="text-center"><i class="fa fa-question fa-2x text-primary">{{ forloop.counter }}</i></td>
                 <td>
@@ -36,7 +36,7 @@
                         <small>{{ top.description }}</small>
                     </h4>
                 <td class="text-center hidden-xs hidden-sm" style="text-align: right"><a
-                        href="#">{{ top.post_set.count }}</a></td>
+                        href="#">{{ top.post_number }}</a></td>
                 <td class="hidden-xs hidden-sm" style="text-align: right">by <a href="#">{{ top.creator }}</a><br>
                     <small><i class="fa fa-clock-o"></i>{{ top.count }}{{ top.created }}</small>
                 </td>

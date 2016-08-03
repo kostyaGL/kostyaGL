@@ -16,7 +16,12 @@ class IndexView(generic.ListView):
     context_object_name = "forum_objects_list"
 
     def get_queryset(self):
-        return Forum.objects.annotate(Count('topic__post'))
+        return (Forum.objects
+                .annotate(Count('topic__post'))
+                .order_by()
+                .annotate(Count("topic", distinct=True))
+                .prefetch_related('creator')
+                )
 
 
 class TopicDetailView(generic.ListView):
@@ -24,14 +29,18 @@ class TopicDetailView(generic.ListView):
     context_object_name = "topic"
 
     def get_queryset(self):
-        return Topic.objects.get(pk=self.kwargs.get('pk'))
+        try:
+            return Forum.objects.prefetch_related("creator__forum_set").get(
+                pk=self.kwargs.get('pk')).topic_set.all().annotate(post_number=Count('post'))
+        except Topic.DoesNotExist:
+            return
 
 
 class PostsListView(generic.ListView):
     template_name = 'forum/posts.html'
 
     def get_queryset(self):
-        return Topic.objects.get(pk=self.kwargs.get('pk'))
+        return Topic.objects.prefetch_related('post_set__creator').get(pk=self.kwargs.get('pk'))
 
     def get_context_data(self, **kwargs):
         data = super(PostsListView, self).get_context_data(**kwargs)
