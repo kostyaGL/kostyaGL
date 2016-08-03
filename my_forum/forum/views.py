@@ -17,9 +17,9 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return (Forum.objects
-                .annotate(Count('topic__post'))
+                .annotate(post_number=Count('topic__post'))
                 .order_by()
-                .annotate(Count("topic", distinct=True))
+                .annotate(topic_number=Count("topic", distinct=True))
                 .prefetch_related('creator')
                 )
 
