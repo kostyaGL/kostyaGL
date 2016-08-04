@@ -17,7 +17,10 @@
                         {% endif %}
                         {{ field }}
                     {% endfor %}
-                    {% if form.errors %}<strong style="color: red">{{ form.non_field_errors }}</strong>{% endif %}
+                    {% if form.errors %}
+                        <strong style="color: red">
+                            {{ form.non_field_errors }}
+                        </strong>{% endif %}
                     <label>
                         <input type="hidden" name="next" value="{{ next }}"/>
                         <input class="button small" type="submit" value="Log in"/>

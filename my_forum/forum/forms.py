@@ -50,6 +50,12 @@ class UserRegistrationForm(UserLoginForm):
 class TopicForm(ModelForm):
     class Meta:
         body = forms.CharField(widget=forms.Textarea)
-        fields = ('body',)
+        fields = ['body']
         model = Post
+
+    def clean(self):
+        user = self.is_valid()
+        if not user:
+            raise forms.ValidationError("Comment field cannot be empty.")
+        return self.cleaned_data
 
