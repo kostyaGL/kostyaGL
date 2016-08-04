@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.db.models import Count
-from django.shortcuts import render, HttpResponseRedirect
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic.edit import FormMixin
 
 from .models import Forum, Topic
@@ -43,7 +41,8 @@ class PostsListView(FormMixin, generic.ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return Topic.objects.get(pk=self.kwargs.get('pk')).post_set.all()
+        return Topic.objects.prefetch_related('post_set__creator__post_set').get(
+            pk=self.kwargs.get('pk')).post_set.all()
 
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
