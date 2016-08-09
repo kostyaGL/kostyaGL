@@ -1,12 +1,13 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.db.models import Count
-from django.views.generic.edit import FormMixin
 
-from .models import Forum, Topic
+from .models import Forum, Topic, MyUser
 from .forms import TopicForm, UserLoginForm, UserRegistrationForm
 
 
@@ -35,35 +36,40 @@ class TopicDetailView(generic.ListView):
             return
 
 
-class PostsListView(FormMixin, generic.ListView):
+class PostsListView(generic.ListView):
     template_name = 'forum/posts.html'
-    form_class = TopicForm
-    paginate_by = 5
 
     def get_queryset(self):
-        return Topic.objects.prefetch_related('post_set__creator__post_set').get(
-            pk=self.kwargs.get('pk')).post_set.all()
-
-    def get(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        data = self.get_queryset()
-        if form.is_valid():
-            form_data = Topic.objects.get(pk=self.kwargs.get('pk'))
-            form_data.post_set.create(body=form.cleaned_data.get('body'), creator=self.request.user)
-        self.__class__.object_list = data
-        context = self.get_context_data(object_list=data)
-        return self.render_to_response(context)
+        return Topic.objects.prefetch_related('post_set__creator').get(pk=self.kwargs.get('pk'))
 
     def get_context_data(self, **kwargs):
-        context = super(PostsListView, self).get_context_data(**kwargs)
-        context['posts'] = context['post_list']
-        context['page'] = context['page_obj']
-        return context
+        data = super(PostsListView, self).get_context_data(**kwargs)
+        list_exam = self.get_queryset()
+        number = list_exam.post_set.all()
+        paginator = Paginator(number, 5)
+        page = self.request.GET.get('page')
+        try:
+            contacts = paginator.page(page)
+        except PageNotAnInteger:
+            contacts = paginator.page(1)
+        except EmptyPage:
+            contacts = paginator.page(paginator.num_pages)
+        data['posts'] = contacts
+        return data
 
     @method_decorator(login_required(login_url='/accounts/login/'))
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
+    def post(self, request, **kwargs):
+        post_form = TopicForm(request.POST)
+        data = self.get_queryset()
+        if request.POST and post_form.is_valid():
+            post_body = request.POST['body']
+            data.post_set.create(body=post_body, creator=request.user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return render(request, 'forum/posts.html', {
+                'posts': data,
+                'error_message': "Body cannot be empty",
+            })
 
 
 class LoginView(generic.FormView):
@@ -97,9 +103,10 @@ class RegistrationView(generic.FormView):
 
     def form_valid(self, form):
         form.clean()
-        user = User.objects.create_user(form.cleaned_data.get('username'),
-                                        form.cleaned_data.get('email'),
-                                        form.cleaned_data.get('password'))
+        user = MyUser.objects.create_user(username=form.cleaned_data.get('username'),
+                                          email=form.cleaned_data.get('email'),
+                                          password=form.cleaned_data.get('password'),
+                                          image=form.cleaned_data.get('image'))
         user.save()
         return super(RegistrationView, self).form_valid(form)
 

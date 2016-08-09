@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.forms import ModelForm
-from django.contrib.auth.models import User
+from PIL import Image
 
-from .models import Post
+from .models import Post, MyUser
 
 
 class UserLoginForm(ModelForm):
@@ -14,8 +14,8 @@ class UserLoginForm(ModelForm):
             'password': forms.PasswordInput(),
         }
 
-        model = User
-        fields = ('username', 'password', )
+        model = MyUser
+        fields = ('username', 'password',)
 
     def is_user_valid(self):
         username = self.cleaned_data.get('username')
@@ -37,14 +37,36 @@ class UserLoginForm(ModelForm):
 class UserRegistrationForm(UserLoginForm):
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
+
+    class Meta(UserLoginForm.Meta):
         email = forms.EmailField()
-        self.fields['email'] = email
+        image = forms.ImageField(widget=forms.ImageField)
+        model = MyUser
+        fields = UserLoginForm.Meta.fields + ('email', 'image',)
 
     def clean(self):
         user = self.is_user_valid()
         if not user:
             return self.cleaned_data
         raise forms.ValidationError("This user is already exist.")
+
+    def clean_image(self):
+        avatar = self.cleaned_data.get('image')
+        if not avatar:
+            raise forms.ValidationError("Couldn't read uploaded image")
+        img = Image.open(avatar)
+        width, height = img.size
+        max_width = max_height = 500
+        if width > max_width or height > max_height:
+            raise forms.ValidationError('Please use an image that is smaller or equal to '
+                                        '%s x %s pixels.' % (max_width, max_height))
+        main, sub = avatar.content_type.split('/')
+        if not sub.lower() in ['jpeg', 'pjpeg', 'png', 'jpg']:
+            raise forms.ValidationError('Please use a JPEG or PNG image.')
+        if avatar.size > (1 * 171 * 98):
+            img.resize((171, 98), Image.ANTIALIAS)
+            img.save(avatar.name, 'JPEG', quality=90)
+        return self.cleaned_data.get('image')
 
 
 class TopicForm(ModelForm):
@@ -58,4 +80,3 @@ class TopicForm(ModelForm):
         if not user:
             raise forms.ValidationError("Comment field cannot be empty.")
         return self.cleaned_data
-

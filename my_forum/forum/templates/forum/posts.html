@@ -8,7 +8,7 @@
                 {% if not request.user.username %}
                     <li><a href="/accounts/login/?next={{ request.path }}">Login</a></li>
                 {% else %}
-                    <li><span>Authorized as <strong>{{ request.user.username|upper }}</strong>. </span><a
+                    <li><span>Authorized as <strong>{{ user.username|upper }}</strong>. </span><a
                             href="/accounts/logout/?next=/accounts/login/?next={{ request.path }}"> Logout</a></li>
 
                 {% endif %}
@@ -29,6 +29,7 @@
                 <td>
                     <h5>
                         <span>Post by {{ post.creator }}</span>
+                        <img src="{{ post.creator.image.url }}">
                         <span class="label label-danger">{{ post.topic.forum.title }}</span>
                         <span class="label label-primary">{{ post.topic.title }}</span>
                     </h5>
@@ -41,21 +42,21 @@
         </table>
         <nav aria-label="...">
             <ul class="pager">
-                {% if page.has_previous %}
+                {% if posts.has_previous %}
                     <li class="previous"><a href="?page={{ 1 }}"><span aria-hidden="true">&larr;</span> First page</a>
                     </li>
-                    <li class="previous"><a href="?page={{ page.previous_page_number }}">Previous</a></li>
+                    <li class="previous"><a href="?page={{ posts.previous_page_number }}">Previous</a></li>
                 {% endif %}
-                <li><a href="#"><span>{{ page.number }} from {{ page.paginator.num_pages }}</span></a>
+                <li><a href="#"><span>{{ posts.number }} from {{ posts.paginator.num_pages }}</span></a>
                 </li>
-                {% if page.has_next %}
-                    <li class="next"><a href="?page={{ page.paginator.num_pages }}">Last Page<span
+                {% if posts.has_next %}
+                    <li class="next"><a href="?page={{ posts.paginator.num_pages }}">Last Page<span
                             aria-hidden="true">&rarr;</span></a></li>
-                    <li class="next"><a href="?page={{ page.next_page_number }}">Next</a></li>
+                    <li class="next"><a href="?page={{ posts.next_page_number }}">Next</a></li>
                 {% endif %}
             </ul>
         </nav>
-        {% if page.number == page.paginator.num_pages %}
+        {% if posts.number == posts.paginator.num_pages %}
             {% include "forum/submit_form.html" %}
         {% endif %}
         </div>

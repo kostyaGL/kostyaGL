@@ -8,7 +8,7 @@
     </ul>
     <div class="tab-content">
         <div role="tabpanel" class="tab-panel hide in active" id="home">
-            <form action="#" method="post">
+            <form enctype="multipart/form-data" action="#" method="post">
                 {% csrf_token %}
                 {% for field in registration %}
                     <label>{{ field.label }}</label>
@@ -19,6 +19,7 @@
                 {% endfor %}
                 {% if form.errors %}<strong style="color: red">{{ form.non_field_errors }}</strong>{% endif %}
              <label>
+                 <br>
                     <input type="hidden" name="next" value="{{ next }}"/>
                     <input class="button small" type="submit" value="Sign in"/>
                 </label>

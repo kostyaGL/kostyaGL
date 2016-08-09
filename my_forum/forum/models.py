@@ -1,6 +1,12 @@
 from __future__ import unicode_literals
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+try:
+    from django.contrib.auth import get_user_model
+    User = settings.AUTH_USER_MODEL
+except ImportError:
+    from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -39,3 +45,8 @@ class Post(models.Model):
 
     def __str__(self):
         return "%s" % self.created.strftime("%b %d, %I:%M %p")
+
+
+class MyUser(AbstractUser):
+    image = models.ImageField(null=True, blank=True)
+
