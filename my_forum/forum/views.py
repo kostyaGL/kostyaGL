@@ -7,8 +7,8 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from django.db.models import Count
 
-from .models import Forum, Topic, MyUser
-from .forms import TopicForm, UserLoginForm, UserRegistrationForm
+from .models import Forum, Topic, MyUser, Post
+from .forms import TopicForm, UserLoginForm, UserRegistrationForm, UserProfileForm
 
 
 class IndexView(generic.ListView):
@@ -103,12 +103,36 @@ class RegistrationView(generic.FormView):
 
     def form_valid(self, form):
         form.clean()
-        user = MyUser.objects.create_user(username=form.cleaned_data.get('username'),
-                                          email=form.cleaned_data.get('email'),
-                                          password=form.cleaned_data.get('password'),
-                                          image=form.cleaned_data.get('image'))
-        user.save()
+        form.instance.set_password(form.instance.password)
+        form.instance.is_staff = True
+        form.instance.save()
         return super(RegistrationView, self).form_valid(form)
 
     def get_success_url(self, **kwargs):
         return self.request.GET['next']
+
+
+class UserProfileView(generic.FormView):
+    template_name = 'forum/user_profile.html'
+    form_class = UserProfileForm
+
+    def get_form_kwargs(self):
+        form_kwargs = super(UserProfileView, self).get_form_kwargs()
+        form_kwargs.update({'instance': MyUser.objects.get(pk=self.kwargs.get('user_pk')),
+                            })
+        return form_kwargs
+
+    def get_context_data(self, **kwargs):
+        data = super(UserProfileView, self).get_context_data(**kwargs)
+        data['profile'] = data.get('form')
+        data['posts'] = Post.objects.prefetch_related("topic__forum__creator").filter(
+            creator=self.kwargs.get('user_pk'))
+        return data
+
+    def form_valid(self, form):
+        form.clean()
+        form.save()
+        return super(UserProfileView, self).form_valid(form)
+
+    def get_success_url(self):
+        return self.request.path

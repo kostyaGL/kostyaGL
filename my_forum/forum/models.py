@@ -49,4 +49,15 @@ class Post(models.Model):
 
 class MyUser(AbstractUser):
     image = models.ImageField(null=True, blank=True)
+    country = models.CharField(max_length=20, null=True, blank=True)
+    city = models.CharField(max_length=20, null=True, blank=True)
+    phone = models.IntegerField(null=True, blank=True)
+    MARRIAGE_STATUS = (
+        ('single', 'single'),
+        ('married', 'married'),
+        ('difficult', 'difficult'),
+        ('none', 'none of your business'),)
+    status = models.CharField(max_length=20,
+                              choices=MARRIAGE_STATUS,
+                              default='none')
 

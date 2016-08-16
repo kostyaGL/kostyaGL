@@ -55,13 +55,8 @@ class UserRegistrationForm(UserLoginForm):
         if not avatar:
             raise forms.ValidationError("Couldn't read uploaded image")
         img = Image.open(avatar)
-        width, height = img.size
-        max_width = max_height = 500
-        if width > max_width or height > max_height:
-            raise forms.ValidationError('Please use an image that is smaller or equal to '
-                                        '%s x %s pixels.' % (max_width, max_height))
-        main, sub = avatar.content_type.split('/')
-        if not sub.lower() in ['jpeg', 'pjpeg', 'png', 'jpg']:
+        sub = img.format.lower()
+        if sub not in ['jpeg', 'pjpeg', 'png', 'jpg']:
             raise forms.ValidationError('Please use a JPEG or PNG image.')
         if avatar.size > (1 * 171 * 98):
             img.resize((171, 98), Image.ANTIALIAS)
@@ -80,3 +75,21 @@ class TopicForm(ModelForm):
         if not user:
             raise forms.ValidationError("Comment field cannot be empty.")
         return self.cleaned_data
+
+
+class UserProfileForm(ModelForm):
+    class Meta:
+        widgets = {
+            'image': forms.ClearableFileInput(),
+        }
+        model = MyUser
+        fields = ('last_name',
+                  'city',
+                  'country',
+                  'status',
+                  'image')
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super(UserProfileForm, self).__init__(*args, **kwargs)
+        # self.fields['image'].widget.attrs = {'id': 'selectedFile'}
+

@@ -8,9 +8,9 @@
                 {% if not request.user.username %}
                     <li><a href="/accounts/login/?next={{ request.path }}">Login</a></li>
                 {% else %}
-                    <li><span>Authorized as <strong>{{ user.username|upper }}</strong>. </span><a
-                            href="/accounts/logout/?next=/accounts/login/?next={{ request.path }}"> Logout</a></li>
 
+                    <li><span>Authorized as <strong><a href="{% url 'forum:user_profile' user.id %}">{{ request.user.username|upper }}</strong>.</span>
+                        <a href="/accounts/logout/?next=/accounts/login/?next={{ request.path }}"> Logout</a></li>
                 {% endif %}
             </ol>
             <div class="clearfix"></div>
@@ -29,7 +29,8 @@
                 <td>
                     <h5>
                         <span>Post by {{ post.creator }}</span>
-                        <img src="{{ post.creator.image.url }}">
+                        <span class="label label-danger">{{ user.email }}</span>
+                        {% if post.creator.image %}<img src="{{ post.creator.image.url }}">{% endif %}
                         <span class="label label-danger">{{ post.topic.forum.title }}</span>
                         <span class="label label-primary">{{ post.topic.title }}</span>
                     </h5>

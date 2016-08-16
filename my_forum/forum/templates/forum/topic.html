@@ -8,8 +8,8 @@
                 {% if not request.user.username %}
                     <li><a href="/accounts/login/?next={{ request.path }}">Login</a></li>
                 {% else %}
-                    <li><span>Authorized as <strong>{{ request.user.username|upper }}</strong>. </span><a
-                            href="/accounts/logout/?next=/accounts/login/?next={{ request.path }}"> Logout</a></li>
+                    <li><span>Authorized as <strong><span><a href="{% url 'forum:user_profile' user.id %}">{{ request.user.username|upper }}</a></span></strong>. </span><a
+                            href="accounts/logout/?next=/accounts/login/"> Logout</a></li>
                 {% endif %}
             </ol>
             <div class="clearfix"></div>
