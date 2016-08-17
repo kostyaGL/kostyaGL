@@ -88,8 +88,4 @@ class UserProfileForm(ModelForm):
                   'country',
                   'status',
                   'image')
-    #
-    # def __init__(self, *args, **kwargs):
-    #     super(UserProfileForm, self).__init__(*args, **kwargs)
-        # self.fields['image'].widget.attrs = {'id': 'selectedFile'}
 
