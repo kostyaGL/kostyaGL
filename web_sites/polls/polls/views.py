@@ -1,11 +1,11 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404, render, render_to_response
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.views import generic
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from django.views import generic
 
-from polls.forms import QuestionForm, ChoicesForm
-from polls.models import Question, Choices
+from web_sites.polls import Question, Choices
+from web_sites.polls import QuestionForm, ChoicesForm
 
 
 class IndexView(generic.ListView):
