@@ -2,8 +2,10 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+
 try:
     from django.contrib.auth import get_user_model
+
     User = settings.AUTH_USER_MODEL
 except ImportError:
     from django.contrib.auth.models import User
@@ -39,12 +41,17 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, blank=True, null=True)
     updated = models.DateTimeField(auto_now=True)
+    like = models.ManyToManyField(User, related_name='like')
     topic = models.ForeignKey(Topic)
     body = models.TextField(max_length=10000)
     user_ip = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
         return "%s" % self.created.strftime("%b %d, %I:%M %p")
+
+    @property
+    def total_likes(self):
+        return self.like.count()
 
 
 class MyUser(AbstractUser):
@@ -60,4 +67,3 @@ class MyUser(AbstractUser):
     status = models.CharField(max_length=20,
                               choices=MARRIAGE_STATUS,
                               default='none')
-
