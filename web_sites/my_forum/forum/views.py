@@ -45,12 +45,17 @@ class PostsListView(FormMixin, generic.ListView):
                 .get(pk=self.kwargs.get('pk'))
                 .post_set.all())
 
-    def get(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        data = self.get_queryset()
+    def get_context_data(self, **kwargs):
+        context = super(PostsListView, self).get_context_data(**kwargs)
+        context['posts'] = context['post_list']
+        context['page'] = context['page_obj']
+        return context
+
+    @method_decorator(login_required(login_url='/accounts/login/'))
+    def post(self, request, *args, **kwargs):
+        form = TopicForm(request.POST)
         if not form.is_valid():
-            self.__class__.object_list = data
+            self.__class__.object_list = self.get_queryset()
             context = self.get_context_data(object_list=self.__class__.object_list)
             return self.render_to_response(context)
         else:
@@ -60,16 +65,6 @@ class PostsListView(FormMixin, generic.ListView):
             self.__class__.object_list = form_data.post_set.all()
             context = self.get_context_data(object_list=self.__class__.object_list)
             return self.render_to_response(context)
-
-    def get_context_data(self, **kwargs):
-        context = super(PostsListView, self).get_context_data(**kwargs)
-        context['posts'] = context['post_list']
-        context['page'] = context['page_obj']
-        return context
-
-    @method_decorator(login_required(login_url='/accounts/login/'))
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
 
 
 class LoginView(generic.FormView):

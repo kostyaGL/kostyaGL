@@ -71,8 +71,8 @@ class TopicForm(ModelForm):
         model = Post
 
     def clean(self):
-        user = self.is_valid()
-        if not user:
+        form = self.is_valid()
+        if not form:
             raise forms.ValidationError("Comment field cannot be empty.")
         return self.cleaned_data
 
