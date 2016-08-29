@@ -54,6 +54,9 @@ class PostsListView(FormMixin, generic.ListView):
     @method_decorator(login_required(login_url='/accounts/login/'))
     def post(self, request, *args, **kwargs):
         form = TopicForm(request.POST)
+        if request.is_ajax() and request.POST['post_id']:
+            print request.POST['post_id']
+
         if not form.is_valid():
             self.__class__.object_list = self.get_queryset()
             context = self.get_context_data(object_list=self.__class__.object_list)
