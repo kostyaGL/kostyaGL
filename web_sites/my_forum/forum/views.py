@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from django.db.models import Count
 from django.views.generic.edit import FormMixin
+from django.http import HttpResponseRedirect
 
 from .models import Forum, Topic, MyUser, Post
 from .forms import TopicForm, UserLoginForm, UserRegistrationForm, UserProfileForm
@@ -56,18 +57,15 @@ class PostsListView(FormMixin, generic.ListView):
         form = TopicForm(request.POST)
         if request.is_ajax() and request.POST['post_id']:
             print request.POST['post_id']
-
-        if not form.is_valid():
-            self.__class__.object_list = self.get_queryset()
-            context = self.get_context_data(object_list=self.__class__.object_list)
-            return self.render_to_response(context)
-        else:
+        if form.is_valid():
             form_data = Topic.objects.get(pk=self.kwargs.get('pk'))
             form_data.post_set.create(body=form.cleaned_data.get('body'),
                                       creator=self.request.user)
-            self.__class__.object_list = form_data.post_set.all()
+        else:
+            self.__class__.object_list = self.get_queryset()
             context = self.get_context_data(object_list=self.__class__.object_list)
             return self.render_to_response(context)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class LoginView(generic.FormView):

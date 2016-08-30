@@ -1,7 +1,7 @@
 {% extends 'forum/base.html' %}
 {% load static %}
 {% block extra_head_content %}
-<form action="#" role="form" method="post" id="likes_form">
+<form role="form" method="post" id="likes_form">
     {% csrf_token %}
     <div class="form-group">
             <label for="post_id" class="hidden">

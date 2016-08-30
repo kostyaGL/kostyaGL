@@ -2,10 +2,9 @@ submitLike = function(event){
 event.preventDefault();
 var $error_message = $('#error');
 var obj = JSON.parse(JSON.stringify($('#likes_form').serializeArray()));
-    console.log("url " + window.location.href);
 $.ajax({
     type: "POST",
-    url: "/1/posts/",
+    url: window.location.pathname,
     data: obj
 }).done(function(data){
     if (data=='delete') {
