@@ -11,7 +11,7 @@
 
                     <li><span>Authorized as<strong><a
 
-                            href="{% url 'forum:user_profile' user.id %}">{{ request.user.username| upper }}</strong>.
+                            href="{% url 'forum:user_profile' user.id %}"> {{ request.user.username| upper }}</a></strong>.
                     </span>
                         <a href="/accounts/logout/?next=/accounts/login/?next={{ request.path }}"> Logout</a></li>
                 {% endif %}

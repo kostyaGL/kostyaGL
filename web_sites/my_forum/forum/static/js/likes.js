@@ -7,7 +7,7 @@ $.ajax({
     url: window.location.pathname,
     data: obj
 }).done(function(data){
-    if (data=='delete') {
+    if (data=='done') {
         setTimeout(function(){window.location.replace("/")}, 500);
            } else if (data == 'delete'){
         $error_message.show();
