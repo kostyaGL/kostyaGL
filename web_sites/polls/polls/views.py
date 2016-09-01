@@ -4,8 +4,10 @@ from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views import generic
 
-from web_sites.polls import Question, Choices
-from web_sites.polls import QuestionForm, ChoicesForm
+# from web_sites.polls import Question, Choices
+# from web_sites.polls import QuestionForm, ChoicesForm
+from polls.forms import QuestionForm, ChoicesForm
+from polls.models import Question, Choices
 
 
 class IndexView(generic.ListView):

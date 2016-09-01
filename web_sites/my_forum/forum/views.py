@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from django.db.models import Count
 from django.views.generic.edit import FormMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 from .models import Forum, Topic, MyUser, Post
 from .forms import TopicForm, UserLoginForm, UserRegistrationForm, UserProfileForm
@@ -42,7 +42,7 @@ class PostsListView(FormMixin, generic.ListView):
 
     def get_queryset(self):
         return (Topic.objects
-                .prefetch_related('post_set__creator')
+                .prefetch_related('post_set__creator').prefetch_related("post_set__like__user_permissions")
                 .get(pk=self.kwargs.get('pk'))
                 .post_set.all())
 
@@ -55,8 +55,16 @@ class PostsListView(FormMixin, generic.ListView):
     @method_decorator(login_required(login_url='/accounts/login/'))
     def post(self, request, *args, **kwargs):
         form = TopicForm(request.POST)
-        if request.is_ajax() and request.POST['post_id']:
-            print request.POST['post_id']
+        if request.is_ajax() and request.POST['like']:
+            post = Post.objects.get(pk=request.POST['like'])
+            if not post.creator == request.user and request.user not in post.like.all():
+                post.like.add(request.user)
+                return HttpResponse('done')
+            elif request.user in post.like.all():
+                post.like.remove(request.user)
+                return HttpResponse('done')
+            else:
+                return HttpResponse('undo')
         if form.is_valid():
             form_data = Topic.objects.get(pk=self.kwargs.get('pk'))
             form_data.post_set.create(body=form.cleaned_data.get('body'),

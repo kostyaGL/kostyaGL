@@ -37,7 +37,17 @@
                     <td align="center"><strong> <span class="label label-danger">{{ post.topic.forum.title }}</span>
                         <span class="label label-primary">{{ post.topic.title }}</span></strong></td>
                     <td>
-                         {% include "forum/likes.html" %}
+
+                        <a onclick="submitLike(event)" name="like" id="{{ post.id }}">
+                            <span onclick="return false" class="glyphicon glyphicon-heart" style="color: red"
+                                  aria-hidden="false"
+                                  title="like" id="{{ post.id }}"></span></a>
+                        {% for like in post.like.all %}
+                            <strong>
+                                <span class="label label-primary">{{ like }}</span></strong>
+
+                            </a>
+                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
@@ -52,7 +62,7 @@
                     </li>
                     <li class="previous"><a href="?page={{ page.previous_page_number }}">Previous</a></li>
                 {% endif %}
-                <li><a href="#"><span>{{ posts.number }} from {{ page.paginator.num_pages }}</span></a>
+                <li><a href="#"><span>{{ page.number }} from {{ page.paginator.num_pages }}</span></a>
                 </li>
                 {% if page.has_next %}
                     <li class="next"><a href="?page={{ page.paginator.num_pages }}">Last Page<span
