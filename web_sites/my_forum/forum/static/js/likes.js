@@ -3,9 +3,15 @@ submitLike = function (event) {
         function () {
             console.log(event);
             event.preventDefault();
-            var id_btn = event.target.id;
-            var name = event.target.title;
-            var btn_inp = [{name: 'csrfmiddlewaretoken', value: csrftoken}, {name: name, value: id_btn}];
+            var btn_inp = [
+                {   name: 'csrfmiddlewaretoken',
+                    value: csrftoken
+                },
+                {
+                    name: event.target.title,
+                    value: event.target.id
+                }
+            ];
             $.ajax({
                 type: "POST",
                 url: window.location.href,
@@ -14,12 +20,9 @@ submitLike = function (event) {
                 if (data == 'done') {
                     setTimeout(function () {
                         window.location.replace(window.location.href)
-                    }, 500);
+                    });
                 } else if (data == 'undo') {
-                    console.log(id_btn);
                 }
-
             });
-
         });
 };

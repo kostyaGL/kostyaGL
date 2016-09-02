@@ -55,7 +55,7 @@ class PostsListView(FormMixin, generic.ListView):
     @method_decorator(login_required(login_url='/accounts/login/'))
     def post(self, request, *args, **kwargs):
         form = TopicForm(request.POST)
-        if request.is_ajax() and request.POST['like']:
+        if request.is_ajax():
             post = Post.objects.get(pk=request.POST['like'])
             if not post.creator == request.user and request.user not in post.like.all():
                 post.like.add(request.user)
