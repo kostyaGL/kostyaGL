@@ -113,7 +113,7 @@ class RegistrationView(generic.FormView):
         return super(RegistrationView, self).form_valid(form)
 
     def get_success_url(self, **kwargs):
-        return self.request.GET['next']
+        return self.request.path
 
 
 class UserProfileView(generic.FormView):

@@ -1,5 +1,8 @@
+import StringIO
+import uuid
 from django import forms
 from django.contrib.auth import authenticate
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms import ModelForm
 from PIL import Image
 
@@ -58,10 +61,12 @@ class UserRegistrationForm(UserLoginForm):
         sub = img.format.lower()
         if sub not in ['jpeg', 'pjpeg', 'png', 'jpg']:
             raise forms.ValidationError('Please use a JPEG or PNG image.')
-        if avatar.size > (1 * 171 * 98):
-            img.resize((171, 98), Image.ANTIALIAS)
-            img.save(avatar.name, 'JPEG', quality=90)
-        return self.cleaned_data.get('image')
+        if avatar.size > (1 * 271 * 158):
+            img = img.resize((271, 158), Image.ANTIALIAS)
+            buffer = StringIO.StringIO()
+            img.save(buffer, 'JPEG', quality=90)
+            image_path = InMemoryUploadedFile(buffer, None, str(uuid.uuid4()), 'image/png', buffer.len, None)
+            return image_path
 
 
 class TopicForm(ModelForm):
@@ -77,7 +82,10 @@ class TopicForm(ModelForm):
         return self.cleaned_data
 
 
-class UserProfileForm(ModelForm):
+class UserProfileForm(UserRegistrationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+
     class Meta:
         widgets = {
             'image': forms.ClearableFileInput(),
@@ -88,4 +96,3 @@ class UserProfileForm(ModelForm):
                   'country',
                   'status',
                   'image')
-
