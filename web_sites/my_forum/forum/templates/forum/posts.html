@@ -40,19 +40,17 @@
 
                         <a onclick="submitLike(event)" name="like" id="{{ post.id }}">
                             <span onclick="return false" class="glyphicon glyphicon-heart"
-                                  {% if post.like.all %} style="color: red" {% else %} style="color: blue"{% endif %}
+                                    {% if post.like.all %} style="color: red" {% else %} style="color: blue"{% endif %}
                                   aria-hidden="false"
                                   title="like" id="{{ post.id }}"></span></a>
                         {% for like in post.like.all %}
-                            <strong>
-                                <span class="label label-primary">{{ like }}</span></strong>
-                            </a>
+
+                            <span class="label label-primary">{{ like }}</span>
                         {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
         {% endif %}
-        </tr>
         </tbody>
         </table>
         <nav aria-label="...">
