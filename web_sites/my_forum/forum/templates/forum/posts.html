@@ -37,22 +37,20 @@
                     <td align="center"><strong> <span class="label label-danger">{{ post.topic.forum.title }}</span>
                         <span class="label label-primary">{{ post.topic.title }}</span></strong></td>
                     <td>
-                        <div class="likes">
-                            <a onclick="submitLike(event)" name="like" id="{{ post.id }}">
+
+                        <a onclick="submitLike(event)" name="like" id="{{ post.id }}">
                             <span onclick="return false" class="glyphicon glyphicon-heart"
                                     {% if post.like.all %} style="color: red" {% else %} style="color: blue"{% endif %}
                                   aria-hidden="false"
-                                  title="like" id="{{ post.id }}"></span>
-                                {% for like in post.like.all %}
-                                    <span class="label label-primary">{{ like }}</span>
-                                {% endfor %}
-                            </a>
-                        </div>
+                                  title="like" id="{{ post.id }}"></span></a>
+                        {% for like in post.like.all %}
+
+                            <span class="label label-primary">{{ like }}</span>
+                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
         {% endif %}
-        </tr>
         </tbody>
         </table>
         <nav aria-label="...">
