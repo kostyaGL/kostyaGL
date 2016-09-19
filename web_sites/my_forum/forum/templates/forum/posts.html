@@ -38,15 +38,15 @@
                         <span class="label label-primary">{{ post.topic.title }}</span></strong></td>
                     <td>
 
-                        <a onclick="submitLike(event)" name="like" id="{{ post.id }}">
+                        <a name="like" id="{{ post.id }}">
                             <span onclick="return false" class="glyphicon glyphicon-heart"
                                     {% if post.like.all %} style="color: red" {% else %} style="color: blue"{% endif %}
                                   aria-hidden="false"
                                   title="like" id="{{ post.id }}"></span>
                         {% for like in post.like.all %}
-
                             <span class="label label-primary">{{ like }}</span>
-                        {% endfor %}</a>
+                        {% endfor %}
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
