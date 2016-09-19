@@ -1,10 +1,12 @@
+import json
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.db.models import Count
 from django.views.generic.edit import FormMixin
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 
 from .models import Forum, Topic, MyUser, Post
 from .forms import TopicForm, UserLoginForm, UserRegistrationForm, UserProfileForm
@@ -59,10 +61,10 @@ class PostsListView(FormMixin, generic.ListView):
             post = Post.objects.get(pk=request.POST['like'])
             if not post.creator == request.user and request.user not in post.like.all():
                 post.like.add(request.user)
-                return HttpResponse('done')
+                return JsonResponse({"done": request.user.username})
             elif request.user in post.like.all():
                 post.like.remove(request.user)
-                return HttpResponse('done')
+                return JsonResponse({"delete": request.user.username})
             else:
                 return HttpResponse('undo')
         if form.is_valid():

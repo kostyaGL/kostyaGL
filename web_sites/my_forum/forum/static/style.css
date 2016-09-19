@@ -7,3 +7,8 @@
 span.glyphicon {
     font-size: 25px;
 }
+
+a[name='like'] {
+    color: #FFFFFF;
+    text-decoration: none
+}

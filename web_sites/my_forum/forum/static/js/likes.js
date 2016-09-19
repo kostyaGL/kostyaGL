@@ -1,7 +1,6 @@
 submitLike = function (event) {
     $("a[name='like']").on('click',
         function () {
-            console.log(event);
             event.preventDefault();
             var btn_inp = [
                 {   name: 'csrfmiddlewaretoken',
@@ -17,11 +16,11 @@ submitLike = function (event) {
                 url: window.location.href,
                 data: btn_inp
             }).done(function (data) {
-                if (data == 'done') {
-                    setTimeout(function () {
-                        window.location.replace(window.location.href)
-                    });
-                } else if (data == 'undo') {
+                if (data.done != undefined) {
+                    $("#"+ event.target.id).append("<span class='label label-primary'>" + data.done + "</span>");
+                } else if (data.delete != undefined) {
+                    console.log(data.delete);
+                     $("#"+ event.target.id + " span:contains(" + data.delete + ")").remove();
                 }
             });
         });
