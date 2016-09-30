@@ -96,3 +96,7 @@ class UserProfileForm(UserRegistrationForm):
                   'country',
                   'status',
                   'image')
+
+    def clean(self):
+        if self.data.get('image-clear'):
+            self.instance.image.delete()
