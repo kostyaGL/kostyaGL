@@ -18,8 +18,12 @@ $(document).ready(function() {
             data: btn_inp
             }).done(function (data) {
                 if (data.done != undefined) {
+                    $("#" + event.target.id + " span[class^='gl']")[0].setAttribute("style", "color : red");
                     $("#"+ event.target.id).append("<span class='label label-primary'>" + data.done + "</span>");
                 } else if (data.delete != undefined) {
+                    if ($("#" + event.target.id + " span[class^=labe]").length < 1){
+                        $("#" + event.target.id + " span[class^='gl']")[0].setAttribute("style", "color : blue");
+                    }
                      $("#"+ event.target.id + " span:contains(" + data.delete + ")").remove();
                 }});
             });

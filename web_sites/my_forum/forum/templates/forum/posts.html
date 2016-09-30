@@ -39,7 +39,7 @@
                     <td>
 
                         <a name="like" id="{{ post.id }}">
-                            <span onclick="return false" class="glyphicon glyphicon-heart"
+                            <span class="glyphicon glyphicon-heart"
                                     {% if post.like.all %} style="color: red" {% else %} style="color: blue"{% endif %}
                                   aria-hidden="false"
                                   title="like" id="{{ post.id }}"></span>
@@ -71,7 +71,7 @@
         </nav>
         {% if page.number == page.paginator.num_pages %}
             {% include "forum/submit_form.html" %}
-        {% endif %}K
+        {% endif %}
         </div>
     </div>
 {% endblock %}
