@@ -39,8 +39,10 @@ class TextHandler(object):
 
     @property
     def open_files(self):
+        print "__" * 40
         print "Following file were selected: {}".format(self.get_file_name)
         print "__" * 40
+        print "\n"
         with open(self.file_path) as f:
             content = f.readlines()
             return content
@@ -48,12 +50,20 @@ class TextHandler(object):
     def make_action(self, indexes, text):
         operation, _ = self.get_pattern
         if operation == "color":
-            pass
+            for k, v in indexes:
+                text = "".join(text)
+                word = list(self._colorize_text(text[k:v]))
+                text = list(text)
+                text[k:v] = word
         elif operation == "underscore":
             for k, v in indexes:
-                return self.underscore_text(text[k:v])
+                text = "".join(text)
+                word = list(self._underscore_text(text[k:v]))
+                text = list(text)
+                text[k:v] = word
         elif operation == "machine":
             pass
+        return "".join(text)
 
     def run(self):
         _, pattern = self.get_pattern
@@ -61,15 +71,14 @@ class TextHandler(object):
         for row_number, row in enumerate(opened_file):
             match_indexes = [(m.start(0), m.end(0)) for m in re.finditer(pattern, row)]
             if match_indexes:
-                print match_indexes, row
-                # return self.make_action(match_indexes, row)
+                yield (row_number, match_indexes, self.make_action(match_indexes, row))
 
     @staticmethod
     def _colorize_text(text):
         return YELLOW + text + END
 
     @staticmethod
-    def underscore_text(text):
+    def _underscore_text(text):
         return UNDERLINE + text + END
 
     @staticmethod

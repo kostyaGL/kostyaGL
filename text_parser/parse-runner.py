@@ -39,7 +39,9 @@ def main(argv):
                      underscore=args.underscore,
                      color=args.color,
                      machine=args.machine)
-    print tr.run()
+
+    for i, m, s in tr.run():
+        print i, s
 
 
 if __name__ == "__main__":
