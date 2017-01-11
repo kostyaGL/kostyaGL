@@ -42,7 +42,7 @@ def main(argv):
                      machine=args.machine)
 
     for i, m, s in tr.run():
-        print "line number:{}:: postions: {}".format(i, m)
+        print "line number:{}:postions:{}".format(i, [i for i in m])
         print "__" * 120
         print s
 

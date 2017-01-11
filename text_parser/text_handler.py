@@ -5,17 +5,6 @@ import sys
 
 logging.basicConfig(level=logging.INFO)
 
-PURPLE = '\033[95m'
-CYAN = '\033[96m'
-DARKCYAN = '\033[36m'
-BLUE = '\033[94m'
-GREEN = '\033[92m'
-YELLOW = '\033[93m'
-RED = '\033[91m'
-BOLD = '\033[1m'
-UNDERLINE = '\033[4m'
-END = '\033[0m'
-
 
 class TextHandler(object):
     def __init__(self, *args, **kwargs):
@@ -48,12 +37,13 @@ class TextHandler(object):
             return content
 
     def make_action(self, indexes, text):
-        operation, _ = self.get_pattern
+        operation, pattern = self.get_pattern
         if operation == "underscore":
             return text + self._underscore_text(indexes, text)
-
         elif operation == "color":
-            return self._colorize_text(indexes, text)
+            return self._colorize_text(pattern, text)
+        elif operation == 'machine':
+            return self._machinize_text(text)
 
     def run(self):
         _, pattern = self.get_pattern
@@ -64,14 +54,22 @@ class TextHandler(object):
                 yield (row_number, match_indexes, self.make_action(match_indexes, row))
 
     @staticmethod
-    def _colorize_text(indexes, text):
-        for k, v in indexes:
-            text = "".join(text)
-            len(text[k:v])
-            word = list(YELLOW + text[k:v] + END)
-            text = list(text)
-            text[k:v] = word
-        return "".join(text)
+    def _colorize_text(pattern, text):
+        colour_format = '\033[{0}m'
+        colour_str = colour_format.format(32)
+        reset_str = colour_format.format(0)
+        last_match = 0
+        formatted_text = ''
+        for match in re.finditer(pattern, text):
+            start, end = match.span()
+            formatted_text += text[last_match: start]
+            formatted_text += colour_str
+            formatted_text += text[start: end]
+            formatted_text += reset_str
+            last_match = end
+        formatted_text += text[last_match:]
+
+        return formatted_text
 
     @staticmethod
     def _underscore_text(ind, text):
@@ -80,5 +78,5 @@ class TextHandler(object):
         return "".join([c if c == "^" else " " for c in text])
 
     @staticmethod
-    def machinize_text(st):
-        return ' '.join(format(ord(x), 'b') for x in st)
+    def _machinize_text(st):
+        return repr(st)
