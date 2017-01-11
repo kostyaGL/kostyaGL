@@ -1,5 +1,6 @@
 import sys
 import os
+
 import argparse
 
 from text_handler import TextHandler
