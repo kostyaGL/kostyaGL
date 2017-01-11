@@ -10,6 +10,9 @@ file_path = os.path.join(dir_path + '/file_storage')
 
 
 class DefaultFileAction(argparse.Action):
+    """
+      Default handler for file path
+    """
     def __call__(self, parser, namespace, values, option_string=None):
         file_pth = self._path_prefix(values)
         if not os.path.isfile(file_pth):
@@ -24,6 +27,11 @@ class DefaultFileAction(argparse.Action):
 
 
 def main(argv):
+    """
+     Commandline args parser
+    :param argv:
+    :return:
+    """
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
     parser.add_argument("-f", "--file_path", action=DefaultFileAction,
@@ -42,7 +50,7 @@ def main(argv):
                      machine=args.machine)
 
     for i, m, s in tr.run():
-        print "line number:{}:postions:{}".format(i, [i for i in m])
+        print "line number:{}:postions:{}".format(i, m)
         print "__" * 120
         print s
 
