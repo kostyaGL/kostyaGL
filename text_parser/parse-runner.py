@@ -41,7 +41,9 @@ def main(argv):
                      machine=args.machine)
 
     for i, m, s in tr.run():
-        print i, s
+        print "line number:{}:: postions: {}".format(i, m)
+        print "__" * 120
+        print s
 
 
 if __name__ == "__main__":
