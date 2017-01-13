@@ -28,7 +28,7 @@ class TextHandler(object):
          Filename getter
         :return:
         """
-        return self.file_path.split("/")[-1]
+        yield "/".join(map(lambda i: i.split("/"), self.file_path))
 
     @property
     def get_pattern(self):
@@ -47,13 +47,13 @@ class TextHandler(object):
         Context manager
         :return:
         """
-        print "__" * 120
-        print "Following file were selected: {}".format(self.get_file_name)
-        print "__" * 120
-        print "\n"
-        with open(self.file_path) as f:
-            content = f.readlines()
-            return content
+        for text_file in self.file_path:
+            with open(text_file) as f:
+                print "__" * 120
+                print '\033[91m' + "Following file were selected: {}".format(text_file.split('/')[-1]) + '\033[0m'
+                print "__"*120
+                content = f.readlines()
+            yield content
 
     def make_action(self, indexes, text):
         """
@@ -117,8 +117,9 @@ class TextHandler(object):
         """
         _, pattern = self.get_pattern
         opened_file = self.open_files
-        for row_number, row in enumerate(opened_file):
-            # get indexes by reg ex
-            match_indexes = [(m.start(0), m.end(0)) for m in re.finditer(pattern, row)]
-            if match_indexes:
-                yield (row_number, match_indexes, self.make_action(match_indexes, row))
+        for txt_file in opened_file:
+            for row_number, row in enumerate(txt_file):
+                # get indexes by reg ex
+                match_indexes = [(m.start(0), m.end(0)) for m in re.finditer(pattern, row)]
+                if match_indexes:
+                    yield (row_number, match_indexes, self.make_action(match_indexes, row))
