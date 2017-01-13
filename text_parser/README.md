@@ -12,3 +12,6 @@ Run:
 
 Example for running:
  (e.g ./parse-runner.py -f file1.txt -m \d+)
+
+ Multiple files:
+ (e.g ./parse-runner.py -f file1.txt file2.txt -m \d+)
