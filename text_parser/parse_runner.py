@@ -25,7 +25,7 @@ class DefaultFileAction(argparse.Action):
 
     @staticmethod
     def _path_prefix(value):
-        return tuple(file_path + "/" + element if "/" not in element else value for element in value)
+        return tuple(file_path + "/" + element if "/" not in element else element for element in value)
 
 
 def main(argv):
