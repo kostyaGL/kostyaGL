@@ -11,7 +11,7 @@ Run:
  -u -c -m == params are mutually exclusive
 
 Example for running:
- (e.g ./parse-runner.py -f file1.txt -m \d+)
+ (e.g ./parse-runner.py -f file1.txt -c \d+)
 
  Multiple files:
- (e.g ./parse-runner.py -f file1.txt file2.txt -m \d+)
+ (e.g ./parse-runner.py -f file1.txt file2.txt -c \d+)
