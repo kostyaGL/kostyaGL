@@ -1,4 +1,24 @@
-# Count islands on matrix
+# Given a 2d grid map of 1 (land) and 0 (water), count the number of islands.
+# An island is surrounded by water and is formed by connecting adjacent lands horizontally
+# or vertically. You may assume all four edges of the grid are all surrounded by water.
+#
+# Example 1:
+#
+# 11110
+# 11010
+# 11000
+# 00000
+# Answer: 1
+#
+# Example 2:
+#
+# 11000
+# 11000
+# 00100
+# 00011
+# Answer: 3
+#
+# There was applied Depth-first search algorithm
 
 PERM = [(i, y) for i in range(-1, 2) for y in range(-1, 2) if not (i, y) == (0, 0)]
 
