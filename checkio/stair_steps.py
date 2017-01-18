@@ -1,19 +1,19 @@
-# coding=utf-8
-# STAIR STEPS(Clear solution)
-# Есть лестница с N ступеньками и двумя площадками - одна вначале и одна в конце.
-# На каждой ступеньке есть число (от -100 до 100 кроме 0).
-# И на площадках написаны нули. Вы находитесь на первой площадке и надо оказаться на второй.
-# Для этого вы можете шагнуть на следующую ступеньку или через одну.
-# Вам нужно найти такой путь, чтобы сумма чисел на ступеньках куда вы наступаете
-# была максимально возможной для данной лестницы.
-# Результатом должна быть эта сумма.
+# STAIR STEPS (Clear solution)
+# There is a ladder with steps N and the two sites - one at the beginning and one at the end.
+# At each step there is a number (from -100 to 100 except for 0).
+# And the zeros are written sites. You are on the first floor and have to be in the second.
+# To do this, you can step to the next step, or through one.
+# You need to find a way that the sum of the numbers on the steps where you tread
+# Was the maximum possible for this ladder.
+# The result should be that amount.
 
 
 def checkio(n):
-   data = [0]+n+[0]
-   for i in range(2,len(data)):
-       data[i] += max(data[i-1], data[i-2])
-   return data[-1]
+    data = [0] + n + [0]
+    for i in range(2, len(data)):
+        data[i] += max(data[i - 1], data[i - 2])
+    return data[-1]
+
 
 print checkio([5, -3, -1, 2])
 print checkio([5, 6, -10, -7, 4])
