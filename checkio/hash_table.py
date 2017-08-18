@@ -66,9 +66,6 @@ H[31] = "cow"
 H[44] = "goat"
 H[55] = "pig"
 H[20] = "chicken"
-H[99] = "a"
-H[91] = "b"
-H[93] = "c"
 print(H.slots)
 print(H.data)
 
