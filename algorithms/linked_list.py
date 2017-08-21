@@ -1,91 +1,75 @@
 class Node:
-    def __init__(self, initdata):
-        self.data = initdata
+    def __init__(self, data):
+        self.data = data
         self.next = None
 
-    def getData(self):
-        return self.data
-
-    def getNext(self):
+    @property
+    def get_next(self):
         return self.next
 
-    def setData(self, newdata):
-        self.data = newdata
+    @property
+    def get_data(self):
+        return self.data
 
-    def setNext(self, newnext):
-        self.next = newnext
+    def set_next(self, item):
+        self.next = item
+
+    def set_data(self, item):
+        self.data = item
 
 
-class UnorderedList:
+class LinkedList:
     def __init__(self):
         self.head = None
 
-    def isEmpty(self):
-        return self.head == None
-
-    def add(self, item):
+    def push(self, item):
         temp = Node(item)
-        temp.setNext(self.head)
+        temp.set_next(self.head)
         self.head = temp
 
+    @property
+    def is_empty(self):
+        return not self.head
+
+    @property
     def size(self):
         current = self.head
         count = 0
-        while current != None:
-            count = count + 1
-            current = current.getNext()
-
+        while current:
+            count += 1
+            current = current.get_next
         return count
 
-    def search(self, item):
+    def search(self, node):
         current = self.head
-        found = False
-        while current != None and not found:
-            if current.getData() == item:
-                found = True
-            else:
-                current = current.getNext()
+        while current:
+            if current.get_data == node:
+                return True
+            current = current.get_next
+        return False
 
-        return found
-
-    def remove(self, item):
+    def delete(self, item):
         current = self.head
         previous = None
         found = False
         while not found:
-            if current.getData() == item:
+            if current.get_data == item:
                 found = True
             else:
                 previous = current
-                current = current.getNext()
+                current = current.get_next
 
-        if previous == None:
-            self.head = current.getNext()
+        if not previous:
+            self.head = current.get_next
         else:
-            previous.setNext(current.getNext())
+            previous.set_next(current.get_next)
 
 
-mylist = UnorderedList()
-
-mylist.add(31)
-mylist.add(77)
-mylist.add(17)
-mylist.add(93)
-mylist.add(26)
-mylist.add(54)
-
-print(mylist.size())
-print(mylist.search(93))
-print(mylist.search(100))
-
-mylist.add(100)
-print(mylist.search(100))
-print(mylist.size())
-
-mylist.remove(54)
-print(mylist.size())
-mylist.remove(93)
-print(mylist.size())
-mylist.remove(31)
-print(mylist.size())
-print(mylist.search(93))
+s = LinkedList()
+s.push(12)
+s.push(14)
+s.push(15)
+s.push(16)
+s.push(17)
+s.push(18)
+print(s.delete(14))
