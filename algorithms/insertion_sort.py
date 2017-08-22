@@ -1,15 +1,12 @@
-def insertion_sort(lst):
-    for index in range(1, len(lst)):
-
-        current_value = lst[index]
-        position = index
-
-        while position > 0 and lst[position - 1] > current_value:
-            lst[position] = lst[position - 1]
-            position = position - 1
-
-        lst[position] = current_value
-    return lst
+def insertion_sort(data):
+    for i in range(1, len(data)):
+        position = i
+        current_value = data[i]
+        while position and data[position - 1] > current_value:
+            data[position] = data[position - 1]
+            position -= 1
+        data[position] = current_value
+    return data
 
 
-print(insertion_sort([54, 26, 93, 17, 77, 31, 44, 55, 20]))
+print(insertion_sort([6, 5, 4, 3, 2, 1]))
