@@ -34,5 +34,6 @@ def healthy(grid):
     return max_center
 
 
-print healthy(((0,1,0),(1,1,1),(0,1,0)))
-
+print healthy(((0, 1, 0),
+               (1, 1, 1),
+               (0, 1, 0)))
