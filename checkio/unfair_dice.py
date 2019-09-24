@@ -1,5 +1,5 @@
 import itertools
-
+# https://py.checkio.org/en/mission/unfair-dice/
 
 def winning_die(enemy_die):
     enemy_die_length = len(enemy_die)

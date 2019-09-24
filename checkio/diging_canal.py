@@ -4,7 +4,7 @@
 import heapq
 
 ORTHOGONAL = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-
+# https://py.checkio.org/en/mission/digging-a-canal/
 
 def checkio(data):
     """

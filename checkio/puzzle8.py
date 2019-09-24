@@ -1,4 +1,6 @@
 # 8 puzzle
+# https://py.checkio.org/en/mission/8-puzzle/
+
 
 def tuplization(data):
     return tuple(tuple(col for col in row) for row in data)

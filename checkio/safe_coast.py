@@ -1,4 +1,5 @@
 # SAFE COAST
+# https://py.checkio.org/en/mission/safe-coasts/
 
 from heapq import heappop, heapify, heappush
 

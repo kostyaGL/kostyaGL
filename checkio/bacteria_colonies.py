@@ -1,3 +1,8 @@
+"""
+https://py.checkio.org/en/mission/bacteria-colonies/
+"""
+
+
 def level(r, c, l):
     result = set()
     for i in range(l):
