@@ -49,8 +49,8 @@ def checkio(data):
     return islands
 
 
-print checkio([[0, 0, 0, 0, 0],
+print(checkio([[0, 0, 0, 0, 0],
                [0, 0, 1, 1, 0],
                [0, 0, 0, 1, 0],
                [0, 1, 0, 0, 0],
-               [0, 0, 0, 0, 0]])
+               [0, 0, 0, 0, 0]]))

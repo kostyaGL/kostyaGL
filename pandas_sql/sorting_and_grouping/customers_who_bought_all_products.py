@@ -1,0 +1,104 @@
+"""*
+Table: Customer
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| customer_id | int     |
+| product_key | int     |
++-------------+---------+
+This table may contain duplicates rows.
+customer_id is not NULL.
+product_key is a foreign key (reference column) to Product table.
+
+
+Table: Product
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| product_key | int     |
++-------------+---------+
+product_key is the primary key (column with unique values) for this table.
+
+
+Write a solution to report the customer ids from the Customer table that bought all the products in the Product table.
+
+Return the result table in any order.
+
+The result format is in the following example.
+
+
+
+Example 1:
+
+Input:
+Customer table:
++-------------+-------------+
+| customer_id | product_key |
++-------------+-------------+
+| 1           | 5           |
+| 2           | 6           |
+| 3           | 5           |
+| 3           | 6           |
+| 1           | 6           |
++-------------+-------------+
+Product table:
++-------------+
+| product_key |
++-------------+
+| 5           |
+| 6           |
++-------------+
+Output:
++-------------+
+| customer_id |
++-------------+
+| 1           |
+| 3           |
++-------------+
+Explanation:
+The customers who bought all the products (5 and 6) are customers with IDs 1 and 3.
+*/
+with Customer as (
+    select 1 as customer_id, 5 as product_key union all
+    select 2 as customer_id, 6 as product_key union all
+    select 3 as customer_id, 5 as product_key union all
+    select 3 as customer_id, 6 as product_key union all
+    select 1 as customer_id, 6 as product_key
+),
+Product as (
+    select 5 as product_key union all
+    select 6 as product_key
+)
+
+select customer_id
+from Customer
+group by customer_id
+having count(distinct product_key) = (
+    select count(*)
+    from Product
+)
+"""
+import pandas as pd
+
+# Simulating the Customer and Product tables
+customers = pd.DataFrame({
+    'customer_id': [1, 2, 3, 3, 1],
+    'product_key': [5, 6, 5, 6, 6]
+})
+
+products = pd.DataFrame({
+    'product_key': [5, 6]
+})
+
+# Grouping by customer_id and counting distinct products they purchased
+customer_summary = customers.groupby('customer_id')['product_key'].nunique().reset_index()
+
+# Filtering customers who bought all products
+all_products = products['product_key'].nunique()
+customers_with_all_products = customer_summary[customer_summary['product_key'] == all_products]['customer_id']
+
+# Displaying the result
+print(customers_with_all_products)
+

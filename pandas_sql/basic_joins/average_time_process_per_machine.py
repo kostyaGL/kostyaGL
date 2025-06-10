@@ -1,0 +1,128 @@
+"""
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| machine_id     | int     |
+| process_id     | int     |
+| activity_type  | enum    |
+| timestamp      | float   |
++----------------+---------+
+The table shows the user activities for a factory website.
+(machine_id, process_id, activity_type) is the primary key (combination of columns with unique values) of this table.
+machine_id is the ID of a machine.
+process_id is the ID of a process running on the machine with ID machine_id.
+activity_type is an ENUM (category) of type ('start', 'end').
+timestamp is a float representing the current time in seconds.
+'start' means the machine starts the process at the given timestamp and 'end' means the machine ends the process at the given timestamp.
+The 'start' timestamp will always be before the 'end' timestamp for every (machine_id, process_id) pair.
+
+
+There is a factory website that has several machines each running the same number of processes. Write a solution to find the average time each machine takes to complete a process.
+
+The time to complete a process is the 'end' timestamp minus the 'start' timestamp. The average time is calculated by the total time to complete every process on the machine divided by the number of processes that were run.
+
+The resulting table should have the machine_id along with the average time as processing_time, which should be rounded to 3 decimal places.
+
+Return the result table in any order.
+
+The result format is in the following example.
+
+
+
+Example 1:
+
+Input:
+Activity table:
++------------+------------+---------------+-----------+
+| machine_id | process_id | activity_type | timestamp |
++------------+------------+---------------+-----------+
+| 0          | 0          | start         | 0.712     |
+| 0          | 0          | end           | 1.520     |
+| 0          | 1          | start         | 3.140     |
+| 0          | 1          | end           | 4.120     |
+| 1          | 0          | start         | 0.550     |
+| 1          | 0          | end           | 1.550     |
+| 1          | 1          | start         | 0.430     |
+| 1          | 1          | end           | 1.420     |
+| 2          | 0          | start         | 4.100     |
+| 2          | 0          | end           | 4.512     |
+| 2          | 1          | start         | 2.500     |
+| 2          | 1          | end           | 5.000     |
++------------+------------+---------------+-----------+
+Output:
++------------+-----------------+
+| machine_id | processing_time |
++------------+-----------------+
+| 0          | 0.894           |
+| 1          | 0.995           |
+| 2          | 1.456           |
++------------+-----------------+
+Explanation:
+There are 3 machines running 2 processes each.
+Machine 0's average time is ((1.520 - 0.712) + (4.120 - 3.140)) / 2 = 0.894
+Machine 1's average time is ((1.550 - 0.550) + (1.420 - 0.430)) / 2 = 0.995
+Machine 2's average time is ((4.512 - 4.100) + (5.000 - 2.500)) / 2 = 1.456
+
+*/
+
+WITH activity AS (
+  SELECT 0 AS machine_id, 0 AS process_id, 'start' AS activity_type, 0.712 AS timestamp UNION ALL
+  SELECT 0 AS machine_id, 0 AS process_id, 'end' AS activity_type, 1.520 AS timestamp UNION ALL
+  SELECT 0 AS machine_id, 1 AS process_id, 'start' AS activity_type, 3.140 AS timestamp UNION ALL
+  SELECT 0 AS machine_id, 1 AS process_id, 'end' AS activity_type, 4.120 AS timestamp UNION ALL
+  SELECT 1 AS machine_id, 0 AS process_id, 'start' AS activity_type, 0.550 AS timestamp UNION ALL
+  SELECT 1 AS machine_id, 0 AS process_id, 'end' AS activity_type, 1.550 AS timestamp UNION ALL
+  SELECT 1 AS machine_id, 1 AS process_id, 'start' AS activity_type, 0.430 AS timestamp UNION ALL
+  SELECT 1 AS machine_id, 1 AS process_id, 'end' AS activity_type, 1.420 AS timestamp UNION ALL
+  SELECT 2 AS machine_id, 0 AS process_id, 'start' AS activity_type, 4.100 AS timestamp UNION ALL
+  SELECT 2 AS machine_id, 0 AS process_id, 'end' AS activity_type, 4.512 AS timestamp UNION ALL
+  SELECT 2 AS machine_id, 1 AS process_id, 'start' AS activity_type, 2.500 AS timestamp UNION ALL
+  SELECT 2 AS machine_id, 1 AS process_id, 'end' AS activity_type, 5.000 AS timestamp
+)
+
+-- Now you can query the CTE to see the data
+SELECT
+ a_l.machine_id,
+ ROUND(AVG(a_r.timestamp - a_l.timestamp), 3) processing_time
+FROM
+ activity a_l
+JOIN activity a_r ON
+  a_l.machine_id=a_r.machine_id
+  AND a_l.process_id=a_r.process_id
+  AND a_l.activity_type='start'
+  AND a_r.activity_type ='end'
+GROUP BY a_l.machine_id
+"""
+import pandas as pd
+
+# Define the activity log data
+activity_data = {
+    'machine_id': [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2],
+    'process_id': [0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1],
+    'activity_type': ['start', 'end', 'start', 'end', 'start', 'end', 'start', 'end', 'start', 'end', 'start', 'end'],
+    'timestamp': [0.712, 1.520, 3.140, 4.120, 0.550, 1.550, 0.430, 1.420, 4.100, 4.512, 2.500, 5.000]
+}
+
+# Create pandas DataFrame from the data
+activity_df = pd.DataFrame(activity_data)
+
+# Filter and calculate processing times
+start_activities = activity_df[activity_df['activity_type'] == 'start']
+end_activities = activity_df[activity_df['activity_type'] == 'end']
+
+# Join start and end activities to calculate processing times
+joined_activities = pd.merge(
+    start_activities, end_activities,
+    on=['machine_id', 'process_id'],
+    suffixes=('_start', '_end')
+)
+
+# Calculate processing_time as the difference between end and start timestamps
+joined_activities['processing_time'] = joined_activities['timestamp_end'] - joined_activities['timestamp_start']
+
+# Calculate average processing time per machine
+result_df = joined_activities.groupby('machine_id')['processing_time'].mean().reset_index()
+result_df['processing_time'] = result_df['processing_time'].round(3)
+
+# Display the result
+print(result_df)

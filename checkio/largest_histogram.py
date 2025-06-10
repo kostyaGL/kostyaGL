@@ -12,9 +12,9 @@ def largest_histogram(histogram):
     return count
 
 
-print largest_histogram([5])  # 5
-print largest_histogram([5, 3])  # 6
-print largest_histogram([1, 1, 4, 1])  # 4
-print largest_histogram([1, 1, 3, 1])  # 4
-print largest_histogram([2, 1, 4, 5, 1, 3, 3])  # 8
-print largest_histogram([3, 3, 3, 6])
+print(largest_histogram([5]))  # 5
+print(largest_histogram([5, 3]))  # 6
+print(largest_histogram([1, 1, 4, 1]))  # 4
+print(largest_histogram([1, 1, 3, 1]))  # 4
+print(largest_histogram([2, 1, 4, 5, 1, 3, 3]))  # 8
+print(largest_histogram([3, 3, 3, 6]))
